@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntLearn</title>
+    <style>
+        :root {
+            /* IntLearn主色调 */
+            --il-blue: #2563eb;
+            --il-purple: #7c3aed;
+            --il-pink: #ec4899;
+            --il-yellow: #facc15;
+            --il-bg: #f8fafc;
+            --il-card: #fff;
+            --il-dark: #22223b;
+            --il-gray: #e5e7eb;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: var(--il-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--il-dark);
+        }
+        .container {
+            max-width: 980px;
+            margin: 48px auto;
+            background: var(--il-card);
+            border-radius: 22px;
+            box-shadow: 0 8px 36px rgba(124, 58, 237, 0.10);
+            padding: 44px 32px 36px 32px;
+        }
+        /* 添加新的样式来控制主页面布局 */
+        .main-page-layout {
+            display: flex;
+            flex-direction: row;
+            max-width: 1280px;
+            margin: 48px auto 0 auto;
+            gap: 32px;
+        }
+        .main-page-layout.hidden {
+            display: none;
+        }
+        .main-section-cards.hidden {
+            display: none;
+        }
+        .main-section-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        nav {
+            width: 100%;
+            background: linear-gradient(90deg, var(--il-blue) 60%, var(--il-purple) 100%);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.08);
+            padding: 0 44px;
+        }
+        nav .logo {
+            color: #fff;
+            font-size: 1.7rem;
+            font-weight: bold;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 8px rgba(124, 58, 237, 0.10);
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        #main-bg {
+            background: linear-gradient(120deg, #e0e7ff 60%, #fbcfe8 100%);
+        }
+        .main-card {
+            width: 100%;
+            min-height: 120px;
+            background: var(--il-card);
+            border-radius: 22px;
+            box-shadow: 0 6px 28px rgba(37,99,235,0.10);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 28px 36px;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s;
+            border: 2px solid transparent;
+            margin-bottom: 24px;
+        }
+        .main-card:hover {
+            box-shadow: 0 12px 36px rgba(236,72,153,0.13);
+            border: 2px solid var(--il-yellow);
+            transform: translateY(-4px) scale(1.03);
+        }
+        .main-card-icon {
+            width: 84px;
+            height: 84px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.7rem;
+            margin-right: 28px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--il-blue) 60%, var(--il-pink) 100%);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(37,99,235,0.10);
+        }
+        .main-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--il-blue);
+            margin: 0;
+        }
+        .main-card-desc {
+            color: #555;
+            font-size: 1.08rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+        .section-title {
+            font-size: 1.7rem;
+            color: var(--il-purple);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .back-btn {
+            margin-top: 18px;
+            background: linear-gradient(90deg, var(--il-blue) 60%, var(--il-pink) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .back-btn:hover {
+            background: linear-gradient(90deg, var(--il-pink) 60%, var(--il-blue) 100%);
+            transform: scale(1.04);
+        }
+        /* Main interface: Topic List */
+        .topic-list {
+            background: #f9fafc;
+            border-radius: 12px;
+            padding: 24px 18px 10px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .topic-item {
+            background: var(--il-yellow);
+            border-radius: 8px;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+        }
+        .topic-info {
+            flex: 1;
+        }
+        .topic-title {
+            font-size: 1.18rem;
+            color: var(--il-dark);
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .topic-meta {
+            font-size: 0.98rem;
+            color: #666;
+        }
+        .topic-enter {
+            background: var(--il-blue);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 22px;
+            cursor: pointer;
+            font-size: 1.08rem;
+            transition: background 0.2s;
+        }
+        .topic-enter:hover {
+            background: var(--il-pink);
+        }
+        /* Secondary interface: Topic Details */
+        .detail-section {
+            display: none;
+        }
+        .detail-header {
+            margin-bottom: 18px;
+        }
+        .question {
+            background: var(--il-yellow);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            color: var(--il-dark);
+        }
+        .answer-list {
+            margin-bottom: 18px;
+        }
+        .answer {
+            background: #e6f2fa;
+            color: var(--il-blue);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .reply-box {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .reply-box textarea {
+            flex: 1;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            resize: vertical;
+        }
+        .reply-box button {
+            background: var(--il-pink);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .reply-box button:hover {
+            background: var(--il-blue);
+        }
+        .reply-visible {
+            font-size: 0.95rem;
+            color: #888;
+            margin-top: 8px;
+        }
+        .interact {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+        .interact button {
+            background: none;
+            border: none;
+            color: var(--il-blue);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .interact button:hover {
+            color: var(--il-pink);
+        }
+        .identity {
+            background: #f6c85f22;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .identity label {
+            font-weight: bold;
+            color: var(--il-blue);
+        }
+        .identity select, .identity input {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .identity button {
+            background: var(--il-blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .identity button:hover {
+            background: var(--il-pink);
+        }
+        .identity span {
+            font-size: 0.98rem;
+        }
+        .question-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--il-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .user-role {
+            font-size: 0.95rem;
+            color: var(--il-pink);
+            font-weight: bold;
+        }
+        .section-divider {
+            border: none;
+            border-top: 2px solid var(--il-yellow);
+            margin: 0 0 24px 0;
+        }
+        .resource-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,85,135,0.08);
+            padding: 22px 28px 18px 28px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-left: 6px solid var(--il-blue);
+            position: relative;
+        }
+        .resource-title {
+            font-size: 1.18rem;
+            color: var(--il-blue);
+            font-weight: bold;
+        }
+        .resource-meta {
+            font-size: 0.98rem;
+            color: #666;
+        }
+        .resource-desc {
+            color: #333;
+            margin: 4px 0 0 0;
+        }
+        .resource-available {
+            color: #fff;
+            background: var(--il-pink);
+            border-radius: 6px;
+            padding: 2px 10px;
+            font-size: 0.92rem;
+            margin-left: 8px;
+        }
+        .resource-btns {
+            margin-top: 8px;
+            display: flex;
+            gap: 14px;
+        }
+        .resource-btn {
+            background: var(--il-blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .resource-btn:hover {
+            background: var(--il-pink);
+        }
+        .rating-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,85,135,0.08);
+            padding: 22px 28px 18px 28px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-left: 6px solid var(--il-yellow);
+            position: relative;
+        }
+        .rating-title {
+            font-size: 1.15rem;
+            color: var(--il-blue);
+            font-weight: bold;
+        }
+        .rating-stars {
+            color: var(--il-yellow);
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .rating-meta {
+            font-size: 0.98rem;
+            color: #666;
+        }
+        .rating-link {
+            color: var(--il-pink);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.98rem;
+        }
+        .comment-board {
+            background: #f9fafc;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-top: 10px;
+        }
+        .comment-item {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+        }
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        .comment-user {
+            color: var(--il-blue);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .comment-content {
+            color: #333;
+        }
+        .add-comment-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .add-comment-box input {
+            flex: 1;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+        }
+        .add-comment-box button {
+            background: var(--il-blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .add-comment-box button:hover {
+            background: var(--il-pink);
+        }
+        .main-card {
+            width: 100%;
+            min-height: 120px;
+            background: var(--il-card);
+            border-radius: 22px;
+            box-shadow: 0 6px 28px rgba(37,99,235,0.10);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 28px 36px;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s;
+            border: 2px solid transparent;
+            margin-bottom: 24px;
+        }
+        .main-card:hover {
+            box-shadow: 0 12px 36px rgba(236,72,153,0.13);
+            border: 2px solid var(--il-yellow);
+            transform: translateY(-4px) scale(1.03);
+        }
+        .main-card-icon {
+            width: 84px;
+            height: 84px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.7rem;
+            margin-right: 28px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--il-blue) 60%, var(--il-pink) 100%);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(37,99,235,0.10);
+        }
+        .main-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .main-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--il-blue);
+            margin: 0;
+        }
+        .main-card-desc {
+            color: #555;
+            font-size: 1.08rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body style="background: #f5f5f5;">
+    <!-- MOOC-style Top Navigation Bar -->
+    <nav style="height:72px;box-shadow:0 2px 12px rgba(124,58,237,0.08);padding:0 44px;display:flex;align-items:center;background:linear-gradient(90deg,#2563eb 60%,#7c3aed 100%);">
+        <div style="display:flex;align-items:center;gap:24px;">
+            <span class="logo" style="font-size:2rem;cursor:pointer;transition:transform 0.2s;" onclick="backToMainSection()" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">IntLearn</span>
+            <a href="#" onclick="enterSection('resources')" style="color:#fff;font-size:1.1rem;font-weight:bold;text-decoration:none;padding:8px 18px;border-radius:8px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">Teaching Resources</a>
+            <a href="#" onclick="enterSection('forum')" style="color:#fff;font-size:1.1rem;font-weight:bold;text-decoration:none;padding:8px 18px;border-radius:8px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">Q&A Forum</a>
+            <a href="#" onclick="enterSection('rating')" style="color:#fff;font-size:1.1rem;font-weight:bold;text-decoration:none;padding:8px 18px;border-radius:8px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">Rating & Recommendation</a>
+            <a href="#" onclick="enterSection('compare')" style="color:#fff;font-size:1.1rem;font-weight:bold;text-decoration:none;padding:8px 18px;border-radius:8px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">Course Comparison</a>
+        </div>
+    </nav>
+    <!-- MOOC-style Main Layout -->
+    <div id="main-page-layout" class="main-page-layout">
+        <!-- Left: Course List -->
+        <div style="width:220px;min-width:180px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(37,99,235,0.07);padding:24px 18px 18px 18px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-weight:bold;color:#2563eb;font-size:1.15rem;margin-bottom:10px;">Courses</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <div class="course-item" onclick="jumpToCourse('Microeconomics')" style="color:#22223b;font-size:1rem;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;" onmouseover="this.style.background='#f0f4ff';this.style.borderLeftColor='#2563eb'" onmouseout="this.style.background='transparent';this.style.borderLeftColor='transparent'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-weight:bold;color:#2563eb;">Microeconomics</div>
+                    <div style="font-size:0.9rem;color:#666;">Economics Dept.</div>
+                </div>
+                <div class="course-item" onclick="jumpToCourse('Data Structures')" style="color:#22223b;font-size:1rem;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;" onmouseover="this.style.background='#f0f4ff';this.style.borderLeftColor='#2563eb'" onmouseout="this.style.background='transparent';this.style.borderLeftColor='transparent'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-weight:bold;color:#2563eb;">Data Structures</div>
+                    <div style="font-size:0.9rem;color:#666;">Computer Science Dept.</div>
+                </div>
+                <div class="course-item" onclick="jumpToCourse('Organic Chemistry')" style="color:#22223b;font-size:1rem;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;" onmouseover="this.style.background='#f0f4ff';this.style.borderLeftColor='#2563eb'" onmouseout="this.style.background='transparent';this.style.borderLeftColor='transparent'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-weight:bold;color:#2563eb;">Organic Chemistry</div>
+                    <div style="font-size:0.9rem;color:#666;">Chemistry Dept.</div>
+                </div>
+                <div class="course-item" onclick="jumpToCourse('Civil Law')" style="color:#22223b;font-size:1rem;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;" onmouseover="this.style.background='#f0f4ff';this.style.borderLeftColor='#2563eb'" onmouseout="this.style.background='transparent';this.style.borderLeftColor='transparent'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-weight:bold;color:#2563eb;">Civil Law</div>
+                    <div style="font-size:0.9rem;color:#666;">Law Dept.</div>
+                </div>
+                <div class="course-item" onclick="jumpToCourse('Business Management')" style="color:#22223b;font-size:1rem;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;" onmouseover="this.style.background='#f0f4ff';this.style.borderLeftColor='#2563eb'" onmouseout="this.style.background='transparent';this.style.borderLeftColor='transparent'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-weight:bold;color:#2563eb;">Business Management</div>
+                    <div style="font-size:0.9rem;color:#666;">Management Dept.</div>
+                </div>
+                <div style="color:#888;font-size:0.98rem;padding:8px 12px;">...</div>
+            </div>
+        </div>
+        <!-- Center: Main Image and Site Name -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:480px;">
+            <div style="background:linear-gradient(120deg,#e0e7ff 60%,#fbcfe8 100%);border-radius:24px;box-shadow:0 8px 36px rgba(124,58,237,0.10);padding:48px 36px 36px 36px;display:flex;flex-direction:column;align-items:center;">
+                <!-- <img src="course-categories.png" alt="Main Visual" style="width:380px;max-width:90vw;border-radius:18px;box-shadow:0 4px 18px rgba(37,99,235,0.10);margin-bottom:28px;"> -->
+                <div style="font-size:2.2rem;font-weight:bold;color:#2563eb;text-shadow:0 2px 8px rgba(124,58,237,0.10);margin-bottom:10px;">Welcome to IntLearn</div>
+                <div style="font-size:1.18rem;color:#555;text-align:center;max-width:420px;">A one-stop platform for course resources, Q&A, ratings, and comparison. Explore, learn, and grow together!</div>
+            </div>
+        </div>
+        <!-- Right: Identity Verification -->
+        <div style="width:260px;min-width:200px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(37,99,235,0.07);padding:28px 18px 18px 18px;display:flex;flex-direction:column;align-items:center;gap:18px;">
+            <div style="font-weight:bold;color:#2563eb;font-size:1.15rem;margin-bottom:10px;">Identity Verification</div>
+            <div class="identity" style="display:flex;flex-direction:column;gap:12px;width:100%;margin-bottom:0;">
+                <label for="role" style="font-weight:bold;color:#2563eb;">Identity:</label>
+                <select id="role" style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;width:100%;">
+                    <option value="visitor">Visitor</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="questioner">Questioner</option>
+                    <option value="answerer">Answerer</option>
+                </select>
+                <input type="password" id="identity-pwd" placeholder="Enter password" style="display:none;width:100%;" />
+                <button id="identity-btn" onclick="verifyIdentity()" style="width:100%;margin:0;">Verify</button>
+                <span id="identity-status" style="color:#ec4899;"></span>
+            </div>
+            <div style="font-size:0.98rem;color:#888;text-align:center;">Verify your identity to access more features.</div>
+        </div>
+    </div>
+    <!-- Main Page Background -->
+    <div id="main-bg" style="width:100vw;min-height:100vh;position:fixed;z-index:-1;top:0;left:0;background:linear-gradient(120deg,#e6f2fa 60%,#f6c85f22 100%);background-size:cover;background-position:center;"></div>
+    <!-- If you have XMUM campus photos, uncomment the line below and replace the image link -->
+    <!-- <div id="main-bg" style="width:100vw;min-height:100vh;position:fixed;z-index:-1;top:0;left:0;background:url('https://www.xmum.edu.my/upload/image/202203/20220310155313_5687.jpg') center/cover no-repeat;"></div> -->
+    <div class="container" style="box-shadow:none;background:transparent;padding-top:32px;">
+        <!-- Main Section Cards -->
+        <div id="main-section-select" class="main-section-cards">
+            <div id="rankings-container" style="display: flex; gap: 32px; justify-content: center;">
+                <div class="ranking-list" style="flex:1;min-width:260px;background:#fff;border-radius:12px;padding:24px 18px 18px 18px;box-shadow:0 2px 12px rgba(37,99,235,0.07);">
+                    <div style="font-weight:bold;color:#f59e42;font-size:1.15rem;margin-bottom:10px;">POPULAR COURSES <span style='color:#aaa;font-size:0.98rem;'>TOP5</span></div>
+                    <div id="popular-courses-list"></div>
+                </div>
+                <div class="ranking-list" style="flex:1;min-width:260px;background:#fff;border-radius:12px;padding:24px 18px 18px 18px;box-shadow:0 2px 12px rgba(37,99,235,0.07);">
+                    <div style="font-weight:bold;color:#f59e42;font-size:1.15rem;margin-bottom:10px;">NEW COURSES <span style='color:#aaa;font-size:0.98rem;'>TOP5</span></div>
+                    <div id="new-courses-list"></div>
+                </div>
+                <div class="ranking-list" style="flex:1;min-width:260px;background:#fff;border-radius:12px;padding:24px 18px 18px 18px;box-shadow:0 2px 12px rgba(37,99,235,0.07);">
+                    <div style="font-weight:bold;color:#f59e42;font-size:1.15rem;margin-bottom:10px;">FIVE-STAR <span style='color:#aaa;font-size:0.98rem;'>TOP5</span></div>
+                    <div id="five-star-list"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Teaching Resources Section -->
+        <div id="resources-panel" style="display:none;">
+            <div class="section-header">
+                <button class="back-btn" onclick="backToMainSection()">← Back to Main</button>
+                <span class="section-title">Teaching Resources</span>
+            </div>
+            <hr class="section-divider" />
+            <div style="margin-bottom:18px;display:flex;align-items:center;gap:18px;">
+                <label for="subject-select" style="font-weight:bold;color:var(--il-blue);">Subject:</label>
+                <select id="subject-select" style="padding:6px 16px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="all">All</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Law">Law</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Management">Management</option>
+                    <option value="Oceanography">Oceanography</option>
+                </select>
+                <input id="resource-search" type="text" placeholder="Search resources..." style="padding:6px 16px;border-radius:8px;border:1px solid #ccc;width:220px;" />
+                <label style="display:flex;align-items:center;gap:4px;font-size:1rem;">
+                    <input type="checkbox" id="resource-available-filter" style="margin-left:8px;"> Only show available
+                </label>
+            </div>
+            <div id="resources-content"></div>
+        </div>
+        <!-- Q&A Forum Section -->
+        <div id="forum-panel" style="display:none;">
+            <div class="section-header">
+                <button class="back-btn" onclick="backToMainSection()">← Back to Main</button>
+                <span id="section-title" class="section-title">Q&A Forum</span>
+            </div>
+            <hr class="section-divider" />
+            <div style="margin-bottom:18px;display:flex;align-items:center;gap:18px;">
+                <label for="forum-type-select" style="font-weight:bold;color:var(--il-blue);">Category:</label>
+                <select id="forum-type-select" style="padding:6px 16px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="all">All</option>
+                    <option value="course">Course Q&A</option>
+                    <option value="life">Life Q&A</option>
+                </select>
+            </div>
+            <div class="identity" style="display:none; margin-bottom: 18px;">
+                <label for="role">Identity:</label>
+                <select id="role">
+                    <option value="visitor">Visitor</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="questioner">Questioner</option>
+                    <option value="answerer">Answerer</option>
+                </select>
+                <input type="password" id="identity-pwd" placeholder="Enter password" style="margin-left:10px;display:none;width:140px;" />
+                <button id="identity-btn" onclick="verifyIdentity()" style="margin-left:10px;">Verify</button>
+                <span id="identity-status" style="margin-left:10px;color:var(--il-pink);"></span>
+            </div>
+            <div id="main-list" class="topic-list" style="display:none;"></div>
+            <div id="detail-section" class="detail-section">
+                <div class="detail-header">
+                    <button class="back-btn" onclick="backToList()">← Back to List</button>
+                </div>
+                <div id="detail-content"></div>
+            </div>
+        </div>
+        <!-- Rating & Recommendation Section -->
+        <div id="rating-panel" style="display:none;">
+            <div class="section-header">
+                <button class="back-btn" onclick="backToMainSection()">← Back to Main</button>
+                <span class="section-title">Rating & Recommendation</span>
+            </div>
+            <hr class="section-divider" />
+            <div style="margin-bottom:18px;display:flex;align-items:center;gap:18px;">
+                <label for="rating-type-select" style="font-weight:bold;color:var(--il-blue);">Category:</label>
+                <select id="rating-type-select" style="padding:6px 16px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="course">Course Rating</option>
+                    <option value="teacher">Teacher Rating</option>
+                </select>
+            </div>
+            <div id="rating-content"></div>
+        </div>
+        
+        <!-- Course Detail Section -->
+        <div id="course-detail-panel" style="display:none;">
+            <div class="section-header">
+                <button class="back-btn" onclick="backToRating()">← Back to Rating</button>
+                <span class="section-title" id="course-detail-title">Course Detail</span>
+            </div>
+            <hr class="section-divider" />
+            <div id="course-detail-content"></div>
+        </div>
+        <!-- Course Comparison Section -->
+        <div id="comparison-panel" style="display:none;">
+            <div class="section-header">
+                <button class="back-btn" onclick="backToMainSection()">← Back to Main</button>
+                <span class="section-title">Course Comparison</span>
+            </div>
+            <hr class="section-divider" />
+            <div id="comparison-content"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        // Section data
+        const sections = {
+            forum: {
+                name: 'Q&A Forum',
+                topics: [
+                    {
+                        title: "What is the motto of Xiamen University?",
+                        author: "Tom",
+                        question: "What is the motto of Xiamen University?",
+                        answers: [
+                            {author: "Answerer A", content: "The motto is 'Pursue Excellence, Strive for Perfection'.", likes: 2}
+                        ]
+                    },
+                    {
+                        title: "Who are some famous alumni of Xiamen University?",
+                        author: "Lucy",
+                        question: "Who are some famous alumni of Xiamen University?",
+                        answers: [
+                            {author: "Answerer B", content: "Chen Jingrun, Lin Yutang, etc.", likes: 1},
+                            {author: "Answerer C", content: "Also Lu Xun, Wang Yanan, etc.", likes: 0}
+                        ]
+                    }
+                ]
+            },
+            resources: {
+                name: 'Teaching Resources',
+                // Resource data to be added later
+            },
+            rating: {
+                name: 'Rating & Recommendation',
+                // Rating data to be added later
+            }
+        };
+        let currentSection = null;
+        let currentTopic = null;
+        let isEditor = false;
+        let compareList = [];
+        let currentCourseDetail = null;
+        // Identity and password rules
+        const identityPasswords = {
+            'student': '1234',
+            'teacher': '1234',
+            'questioner': '1234',
+            'answerer': '1234'
+        };
+        function enterSection(section) {
+            currentSection = section;
+            // 隐藏上半部分内容（主页面布局）
+            document.getElementById('main-page-layout').classList.add('hidden');
+            // 隐藏下半部分的四个板块
+            document.getElementById('main-section-select').classList.add('hidden');
+            
+            document.getElementById('resources-panel').style.display = section === 'resources' ? '' : 'none';
+            document.getElementById('forum-panel').style.display = section === 'forum' ? '' : 'none';
+            document.getElementById('rating-panel').style.display = section === 'rating' ? '' : 'none';
+            document.getElementById('course-detail-panel').style.display = section === 'course-detail' ? '' : 'none';
+            document.getElementById('comparison-panel').style.display = section === 'compare' ? '' : 'none';
+            if(section === 'forum') {
+                document.querySelector('.identity').style.display = '';
+                document.getElementById('main-list').style.display = 'flex';
+                document.getElementById('section-title').textContent = sections[section].name;
+                renderTopicList();
+            } else {
+                document.querySelector('.identity').style.display = 'none';
+                document.getElementById('main-list').style.display = 'none';
+                document.getElementById('detail-section').style.display = 'none';
+            }
+            if(section === 'resources') {
+                renderResources();
+            }
+            if(section === 'rating') {
+                renderRating();
+            }
+            if(section === 'compare') {
+                renderCompare();
+            }
+        }
+        function backToMainSection() {
+            // 如果当前在课程详情页面，返回到评分页面
+            if (currentSection === 'course-detail') {
+                backToRating();
+                return;
+            }
+            
+            // 显示上半部分内容（主页面布局）
+            document.getElementById('main-page-layout').classList.remove('hidden');
+            // 显示下半部分的四个板块
+            document.getElementById('main-section-select').classList.remove('hidden');
+            document.getElementById('resources-panel').style.display = 'none';
+            document.getElementById('forum-panel').style.display = 'none';
+            document.getElementById('rating-panel').style.display = 'none';
+            document.getElementById('course-detail-panel').style.display = 'none';
+            document.getElementById('comparison-panel').style.display = 'none';
+            document.querySelector('.identity').style.display = 'none';
+            document.getElementById('main-list').style.display = 'none';
+            document.getElementById('detail-section').style.display = 'none';
+            
+            // 重置当前状态
+            currentSection = null;
+            currentTopic = null;
+            currentCourseDetail = null;
+        }
+        document.getElementById('role').addEventListener('change', function() {
+            const val = this.value;
+            if(val === 'visitor') {
+                document.getElementById('identity-pwd').style.display = 'none';
+            } else {
+                document.getElementById('identity-pwd').style.display = '';
+            }
+            document.getElementById('identity-status').textContent = '';
+        });
+        function verifyIdentity() {
+            const role = document.getElementById('role').value;
+            const pwd = document.getElementById('identity-pwd').value;
+            if(role === 'visitor') {
+                isEditor = false;
+                document.getElementById('identity-status').textContent = 'Browsing as visitor';
+                renderAll();
+                return;
+            }
+            if(identityPasswords[role] && pwd === identityPasswords[role]) {
+                isEditor = true;
+                document.getElementById('identity-status').textContent = 'Identity verified. Editor mode enabled.';
+                renderAll();
+            } else {
+                isEditor = false;
+                document.getElementById('identity-status').textContent = 'Wrong identity or password';
+                renderAll();
+            }
+        }
+        // Main/Detail view rendering
+        function renderAll() {
+            if(document.getElementById('main-list').style.display !== 'none') {
+                renderTopicList();
+            } else {
+                renderDetail();
+            }
+        }
+        function renderTopicList() {
+            const topicList = document.getElementById('main-list');
+            topicList.innerHTML = '';
+            const forumType = document.getElementById('forum-type-select').value;
+            const topics = sections[currentSection].topics.filter(t => forumType === 'all' || t.type === forumType);
+            topics.forEach((topic, idx) => {
+                const item = document.createElement('div');
+                item.className = 'rating-card';
+                item.innerHTML = `<div class="topic-info">
+                    <div class="topic-title">${topic.title}</div>
+                    <div class="topic-meta">${topic.role}: ${topic.author} &nbsp;|&nbsp; ${topic.answers.length} replies</div>
+                </div>
+                <button class="topic-enter resource-btn" onclick="enterDetail(${idx})">Enter</button>`;
+                topicList.appendChild(item);
+            });
+        }
+        function enterDetail(idx) {
+            currentTopic = idx;
+            document.getElementById('main-list').style.display = 'none';
+            document.getElementById('detail-section').style.display = 'block';
+            renderDetail();
+        }
+        function backToList() {
+            document.getElementById('main-list').style.display = 'flex';
+            document.getElementById('detail-section').style.display = 'none';
+        }
+        function renderDetail() {
+            const topic = sections[currentSection].topics[currentTopic];
+            let html = '';
+            html += `<div class='rating-card question'>
+                <div class='question-user'>
+                    <div class='user-avatar'>${topic.author[0]}</div>
+                    <span class='user-role'>${topic.role}</span>
+                    <span style='color:#333;font-weight:bold;'>${topic.author}</span>
+                </div>
+                <div>${topic.question}</div>
+            </div>`;
+            html += `<div class='answer-list'>`;
+            topic.answers.forEach((ans, i) => {
+                html += `<div class='rating-card answer'>
+                    <div class='question-user'>
+                        <div class='user-avatar'>${ans.author[0]}</div>
+                        <span class='user-role'>${ans.role}</span>
+                        <span style='color:#333;font-weight:bold;'>${ans.author}</span>
+                    </div>
+                    ${ans.content}`;
+                if(isEditor) {
+                    html += `<div class='interact'><button onclick='likeAnswer(${i})'>👍 ${ans.likes} Like</button></div>`;
+                } else {
+                    html += `<div class='interact'><span style='color:#aaa;'>👍 ${ans.likes} Like</span></div>`;
+                }
+                html += `</div>`;
+            });
+            html += `</div>`;
+            html += `<div class='reply-visible'>*Reply to see more*</div>`;
+            if(isEditor) {
+                html += `<div class='reply-box'>
+                    <textarea id='reply-input' rows='2' placeholder='Write your reply...'></textarea>
+                    <button onclick='sendReply()'>Send</button>
+                </div>`;
+            } else {
+                html += `<div class='reply-box'><textarea rows='2' placeholder='Please verify your identity to reply' disabled></textarea>
+                <button disabled>Send</button></div>`;
+            }
+            document.getElementById('detail-content').innerHTML = html;
+        }
+        function sendReply() {
+            if(!isEditor) return;
+            const val = document.getElementById('reply-input').value.trim();
+            if(val) {
+                sections[currentSection].topics[currentTopic].answers.push({author: 'You', content: val, likes: 0});
+                renderDetail();
+            }
+        }
+        function likeAnswer(idx) {
+            if(!isEditor) return;
+            sections[currentSection].topics[currentTopic].answers[idx].likes++;
+            renderDetail();
+        }
+        // Teaching Resources Data
+        const resourceList = [
+            {title: 'Microeconomics Lecture Notes', subject: 'Economics', desc: 'Comprehensive notes for undergraduate microeconomics, XMU edition.', available: true},
+            {title: 'Civil Law Casebook', subject: 'Law', desc: 'Classic civil law cases and analysis, recommended by XMU Law School.', available: true},
+            {title: 'Organic Chemistry Experiments', subject: 'Chemistry', desc: 'Lab manual for organic chemistry, with safety tips.', available: false},
+            {title: 'Data Structures (C Language)', subject: 'Computer Science', desc: 'Course slides and code samples for Data Structures, XMU CS Dept.', available: true},
+            {title: 'Advanced Calculus Workbook', subject: 'Mathematics', desc: 'Practice problems and solutions for advanced calculus.', available: true},
+            {title: 'Business Management Cases', subject: 'Management', desc: 'Case studies for business management, XMU MBA.', available: false},
+            {title: 'Marine Science Introduction', subject: 'Oceanography', desc: 'Introductory reading for XMU Oceanography freshmen.', available: true}
+        ];
+        function renderResources() {
+            const subject = document.getElementById('subject-select').value;
+            const keyword = document.getElementById('resource-search').value.trim().toLowerCase();
+            const onlyAvailable = document.getElementById('resource-available-filter')?.checked;
+            let html = '';
+            let filtered = resourceList.filter(r => (subject === 'all' || r.subject === subject) && (r.title.toLowerCase().includes(keyword) || r.desc.toLowerCase().includes(keyword)) && (!onlyAvailable || r.available));
+            if(filtered.length === 0) {
+                html = '<div style="text-align:center;color:#aaa;margin:40px 0;">No resources found.</div>';
+            } else {
+                filtered.forEach(r => {
+                    html += `<div class='rating-card'>
+                        <div class='resource-title'>${r.title} <span class="resource-meta">${r.subject}</span> ${r.available ? '<span class="resource-available">Available</span>' : ''}</div>
+                        <div class='resource-desc'>${r.desc}</div>
+                        <div class='resource-btns'>
+                            <button class='resource-btn' ${r.available ? '' : 'disabled style="background:#ccc;cursor:not-allowed;"'}>Preview</button>
+                            <button class='resource-btn' ${r.available ? '' : 'disabled style="background:#ccc;cursor:not-allowed;"'}>Download</button>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('resources-content').innerHTML = html;
+        }
+        // Bind filter events
+        document.addEventListener('DOMContentLoaded', function() {
+            const subSel = document.getElementById('subject-select');
+            const search = document.getElementById('resource-search');
+            const avail = document.getElementById('resource-available-filter');
+            if(subSel && search) {
+                subSel.onchange = renderResources;
+                search.oninput = renderResources;
+                if(avail) avail.onchange = renderResources;
+            }
+        });
+        // Rating Data
+        const courseRatings = [
+            {title: 'Microeconomics', subject: 'Economics', ratings: [
+                {user: 'Tom', quality: 5, practical: 5, interactive: 4, easy: 5},
+                {user: 'Lucy', quality: 4, practical: 4, interactive: 5, easy: 4}
+            ], comments: [
+                {user: 'Tom', content: 'Very practical and clear!', tags:['Easy to understand','Practical content'], role:'student', time:'2024-06-01', likes:2},
+                {user: 'Lucy', content: 'The teacher is humorous.', tags:['Highly interactive'], role:'student', time:'2024-06-02', likes:1}
+            ], collected: false},
+            {title: 'Data Structures', subject: 'Computer Science', ratings: [
+                {user: 'Alice', quality: 5, practical: 4, interactive: 4, easy: 4}
+            ], comments: [
+                {user: 'Alice', content: 'A lot of coding practice.', tags:['Practical content'], role:'student', time:'2024-06-03', likes:1}
+            ], collected: false},
+            {title: 'Organic Chemistry', subject: 'Chemistry', ratings: [
+                {user: 'Jack', quality: 4, practical: 4, interactive: 4, easy: 5}
+            ], comments: [
+                {user: 'Jack', content: 'Challenging but rewarding.', tags:['Easy to understand'], role:'student', time:'2024-06-04', likes:0}
+            ], collected: false}
+        ];
+        const teacherRatings = [
+            {name: 'Prof. Wang', dept: 'Economics', avg: 4.8, comments: [
+                {user: 'Tom', content: 'Very inspiring lectures!'}
+            ]},
+            {name: 'Mr. Chen', dept: 'Computer Science', avg: 4.6, comments: [
+                {user: 'Alice', content: 'Patient and helpful.'}
+            ]},
+            {name: 'Ms. Li', dept: 'Chemistry', avg: 4.3, comments: [
+                {user: 'Jack', content: 'Explains concepts clearly.'}
+            ]}
+        ];
+        // Comment available tags
+        const commentTags = ['Easy to understand','Highly interactive','Practical content','Recommended','Interesting','Difficult'];
+        function renderRating() {
+            const type = document.getElementById('rating-type-select').value;
+            let html = '';
+            if(type === 'course') {
+                courseRatings.forEach((c, idx) => {
+                    const avg = calcAvg(c.ratings);
+                    html += `<div class='rating-card'>`
+                        + `<div style='display:flex;align-items:center;justify-content:space-between;'>`
+                        + `<div class='rating-title'>${c.title} <span class='rating-meta'>[${c.subject}]</span></div>`
+                        + `<button class='resource-btn' onclick='enterCourseDetail(${idx})'>View Details</button>`
+                        + `</div>`
+                        + `<div style='margin-bottom:6px;'>`
+                        + `Teaching Quality: ${renderStars(avg.quality)}`
+                        + `Content Practicality: ${renderStars(avg.practical)}`
+                        + `Interactivity: ${renderStars(avg.interactive)}`
+                        + `Ease of Understanding: ${renderStars(avg.easy)}`
+                        + `<span style='color:#888;font-size:0.98rem;'>Total Score: ${(avg.total).toFixed(2)}</span>`
+                        + `</div>`
+                        + `<div class='rating-link' onclick='jumpToResource(\"${c.title}\")'>Go to resource</div>`
+                        + `<div class='comment-board'>`
+                        + `<div style='font-weight:bold;color:var(--il-blue);margin-bottom:4px;'>Featured Comments`
+                        + `<span style='margin-left:18px;font-weight:normal;'>Filter by tag:</span>`
+                        + `<select id='comment-tag-filter-${idx}' onchange='filterComments(${idx})' style='padding:2px 8px;border-radius:6px;'>`
+                        + `<option value='all'>All</option>`
+                        + `${commentTags.map(t=>`<option value='${t}'>${t}</option>`).join('')}`
+                        + `</select>`
+                        + `</div>`
+                        + `<div id='comment-list-${idx}'>${renderComments(idx, 'all')}</div>`
+                        + `<div class='add-comment-box'>`
+                        + `<input id='add-comment-course-${idx}' type='text' placeholder='Add a comment...'/>
+                        <select id='add-comment-tag-${idx}' style='padding:2px 8px;border-radius:6px;'>
+                            <option value=''>Select tag</option>
+                            ${commentTags.map(t=>`<option value='${t}'>${t}</option>`).join('')}
+                        </select>
+                        <button onclick='addCourseComment(${idx})'>Post</button>`
+                        + `</div>`
+                        + `</div>`
+                        + `</div>`;
+                });
+            } else {
+                teacherRatings.forEach((t, idx) => {
+                    html += `<div class='rating-card'>`
+                        + `<div class='rating-title'>${t.name} <span class='rating-meta'>[${t.dept}]</span></div>`
+                        + `<div class='rating-stars'>${renderStars(t.avg)}</div>`
+                        + `<div class='comment-board'>`
+                        + `<div style='font-weight:bold;color:var(--il-blue);margin-bottom:4px;'>Comments</div>`
+                        + `${t.comments.map(cm => `<div class='comment-item'><span class='comment-user'>${cm.user}:</span><span class='comment-content'>${cm.content}</span></div>`).join('')}`
+                        + `<div class='add-comment-box'>`
+                        + `<input id='add-comment-teacher-${idx}' type='text' placeholder='Add a comment...'/>
+                        <button onclick='addTeacherComment(${idx})'>Post</button>`
+                        + `</div>`
+                        + `</div>`
+                        + `</div>`;
+                });
+            }
+            document.getElementById('rating-content').innerHTML = html;
+        }
+        function calcAvg(ratings) {
+            if(!ratings.length) return {quality:0, practical:0, interactive:0, easy:0, total:0};
+            let sum = {quality:0, practical:0, interactive:0, easy:0};
+            ratings.forEach(r => {
+                sum.quality += r.quality;
+                sum.practical += r.practical;
+                sum.interactive += r.interactive;
+                sum.easy += r.easy;
+            });
+            let n = ratings.length;
+            return {
+                quality: sum.quality/n,
+                practical: sum.practical/n,
+                interactive: sum.interactive/n,
+                easy: sum.easy/n,
+                total: (sum.quality+sum.practical+sum.interactive+sum.easy)/(4*n)
+            };
+        }
+        function renderStars(avg) {
+            let stars = '';
+            for(let i=1;i<=5;i++) {
+                stars += i <= Math.round(avg) ? '★' : '☆';
+            }
+            return stars + ` <span style='color:#888;font-size:0.98rem;'>(${avg.toFixed(1)})</span>`;
+        }
+        function renderRatingForm(idx) {
+            const user = localStorage.getItem('ratingUser') || 'You';
+            const rated = (courseRatings[idx].ratings||[]).some(r=>r.user===user);
+            if(rated) return `<span style='color:#aaa;'>You have rated</span>`;
+            let html = `<div style='display:flex;gap:10px;align-items:center;'>`;
+            ['Teaching Quality','Content Practicality','Interactivity','Ease of Understanding'].forEach((label,i)=>{
+                html += `<span>${label}</span><span id='star-${idx}-${i}'></span>`;
+            });
+            html += `<button onclick='submitRating(${idx})' style='margin-left:10px;'>Submit Rating</button></div>`;
+            setTimeout(()=>initStarWidget(idx),0);
+            return html;
+        }
+        function initStarWidget(idx) {
+            for(let i=0;i<4;i++) {
+                const el = document.getElementById(`star-${idx}-${i}`);
+                if(!el) continue;
+                el.innerHTML = '';
+                for(let s=1;s<=5;s++) {
+                    el.innerHTML += `<span style='cursor:pointer;font-size:1.2rem;color:#f6c85f;' onclick='setStar(${idx},${i},${s})' id='star-${idx}-${i}-${s}'>☆</span>`;
+                }
+            }
+        }
+        const ratingTemp = {};
+        function setStar(idx, dim, val) {
+            if(!ratingTemp[idx]) ratingTemp[idx] = [0,0,0,0];
+            ratingTemp[idx][dim] = val;
+            for(let s=1;s<=5;s++) {
+                const star = document.getElementById(`star-${idx}-${dim}-${s}`);
+                if(star) star.textContent = s<=val?'★':'☆';
+            }
+        }
+        function submitRating(idx) {
+            const user = localStorage.getItem('ratingUser') || 'You';
+            if((courseRatings[idx].ratings||[]).some(r=>r.user===user)) return;
+            const arr = ratingTemp[idx]||[0,0,0,0];
+            if(arr.some(v=>v===0)) { alert('Please rate all aspects'); return; }
+            courseRatings[idx].ratings.push({user, quality:arr[0], practical:arr[1], interactive:arr[2], easy:arr[3]});
+            localStorage.setItem('rated-'+idx, '1');
+            
+            // If we're in course detail view, re-render it
+            if(currentSection === 'course-detail' && currentCourseDetail === idx) {
+                renderCourseDetail();
+            } else {
+                renderRating();
+            }
+        }
+        // Resource section linkage jump
+        function jumpToResource(title) {
+            enterSection('resources');
+            document.getElementById('resource-search').value = title;
+            renderResources();
+        }
+        // Bind category switch events
+        document.addEventListener('DOMContentLoaded', function() {
+            const ratingSel = document.getElementById('rating-type-select');
+            if(ratingSel) ratingSel.onchange = renderRating;
+        });
+        function toggleCompare(idx) {
+            if(compareList.includes(idx)) {
+                compareList = compareList.filter(i=>i!==idx);
+            } else {
+                compareList.push(idx);
+            }
+            if(currentSection === 'compare') {
+                renderCompare();
+            }
+        }
+        function drawRadar() {
+            const chart = echarts.init(document.getElementById('radar-chart'));
+            const indicators = [
+                {name:'Teaching Quality', max:5},
+                {name:'Content Practicality', max:5},
+                {name:'Interactivity', max:5},
+                {name:'Ease of Understanding', max:5}
+            ];
+            const series = compareList.map(idx=>{
+                const avg = calcAvg(courseRatings[idx].ratings);
+                return [avg.quality, avg.practical, avg.interactive, avg.easy];
+            });
+            chart.setOption({
+                tooltip: {trigger:'item'},
+                legend: {data: compareList.map(idx=>courseRatings[idx].title), orient: 'vertical', left: 0, top: 24},
+                radar: {indicator: indicators},
+                series: [{
+                    name: 'Course Comparison',
+                    type: 'radar',
+                    data: compareList.map((idx,i)=>({value:series[i],name:courseRatings[idx].title}))
+                }]
+            });
+        }
+        function renderComments(idx, tag) {
+            let list = courseRatings[idx].comments.slice();
+            if(tag && tag !== 'all') list = list.filter(c=>c.tags&&c.tags.includes(tag));
+            // Recommend high-quality comments: sort by likes descending, prioritize those with tags
+            list = list.sort((a,b)=>{
+                if((b.likes||0)!==(a.likes||0)) return (b.likes||0)-(a.likes||0);
+                if((b.tags?.length||0)!==(a.tags?.length||0)) return (b.tags?.length||0)-(a.tags?.length||0);
+                return 0;
+            });
+            if(list.length===0) return `<div style='color:#aaa;'>No comments yet</div>`;
+            return list.map((cm,i)=>`
+                <div class='comment-item' style='display:flex;align-items:center;justify-content:space-between;'>
+                    <div>
+                        <span class='comment-user'>${cm.user} (${cm.role||''})</span>
+                        <span class='comment-content'>${cm.content}</span>
+                        ${cm.tags&&cm.tags.length?cm.tags.map(t=>`<span style='background:#f6c85f33;color:#a51c30;border-radius:4px;padding:2px 6px;margin-left:6px;font-size:0.92rem;'>#${t}</span>`).join(''):''}
+                        <span style='color:#888;font-size:0.92rem;margin-left:8px;'>${cm.time||''}</span>
+                    </div>
+                    <div style='display:flex;align-items:center;gap:8px;'>
+                        <button onclick='likeComment(${idx},${i})' style='background:none;border:none;color:var(--il-blue);cursor:pointer;'>👍${cm.likes||0}</button>
+                        <button onclick='reportComment(${idx},${i})' style='background:none;border:none;color:var(--il-pink);cursor:pointer;'>Report</button>
+                    </div>
+                </div>`).join('');
+        }
+        function filterComments(idx) {
+            const tag = document.getElementById('comment-tag-filter-'+idx).value;
+            document.getElementById('comment-list-'+idx).innerHTML = renderComments(idx, tag);
+        }
+        function addCourseComment(idx) {
+            const input = document.getElementById('add-comment-course-'+idx);
+            const tagSel = document.getElementById('add-comment-tag-'+idx);
+            const val = input.value.trim();
+            const tag = tagSel.value;
+            if(!val) return;
+            const user = localStorage.getItem('ratingUser') || 'You';
+            const role = 'student';
+            const now = new Date();
+            const time = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+            courseRatings[idx].comments.push({user, content: val, tags: tag? [tag]:[], role, time, likes:0});
+            input.value = '';
+            tagSel.value = '';
+            filterComments(idx);
+        }
+        function addTeacherComment(idx) {
+            const input = document.getElementById('add-comment-teacher-'+idx);
+            const val = input.value.trim();
+            if(!val) return;
+            const user = localStorage.getItem('ratingUser') || 'You';
+            teacherRatings[idx].comments.push({user, content: val});
+            input.value = '';
+            renderRating();
+        }
+        function likeComment(idx, i) {
+            courseRatings[idx].comments[i].likes = (courseRatings[idx].comments[i].likes||0)+1;
+            filterComments(idx);
+        }
+        function reportComment(idx, i) {
+            alert('Report received, admin will handle it soon.');
+        }
+        function renderCompare() {
+            let html = '<div style="margin-bottom:18px;">';
+            html += '<div style="display:flex;align-items:center;gap:18px;margin-bottom:16px;">';
+            html += '<label style="font-weight:bold;color:var(--il-blue);">Select courses to compare:</label>';
+            html += '<button onclick="selectAllCourses()" style="background:var(--il-blue);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:0.9rem;cursor:pointer;">Select All</button>';
+            html += '<button onclick="clearSelection()" style="background:var(--il-pink);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:0.9rem;cursor:pointer;">Clear</button>';
+            html += '</div>';
+            
+            courseRatings.forEach((course, idx) => {
+                const avg = calcAvg(course.ratings);
+                html += `<div style="background:#fff;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,0.05);">`;
+                html += `<div style="flex:1;">`;
+                html += `<div style="font-weight:bold;color:var(--il-blue);">${course.title} [${course.subject}]</div>`;
+                html += `<div style="font-size:0.9rem;color:#666;">Total Score: ${avg.total.toFixed(2)}</div>`;
+                html += `</div>`;
+                html += `<label style="display:flex;align-items:center;gap:6px;">`;
+                html += `<input type="checkbox" onchange="toggleCompare(${idx})" ${compareList.includes(idx)?'checked':''}/>`;
+                html += `<span style="font-size:0.9rem;">Compare</span>`;
+                html += `</label>`;
+                html += `</div>`;
+            });
+            
+            html += '</div>';
+            
+            if(compareList.length >= 2) {
+                html += showCompareContent();
+            } else {
+                html += '<div style="text-align:center;color:#aaa;margin:40px 0;font-size:1.1rem;">Please select at least 2 courses to compare</div>';
+            }
+            
+            document.getElementById('comparison-content').innerHTML = html;
+            
+            if(compareList.length >= 2) {
+                setTimeout(drawRadar, 0);
+            }
+        }
+        
+        function selectAllCourses() {
+            compareList = courseRatings.map((_, idx) => idx);
+            renderCompare();
+        }
+        
+        function clearSelection() {
+            compareList = [];
+            renderCompare();
+        }
+        
+        function showCompareContent() {
+            let html = `<div style='background:#fff;border-radius:12px;padding:24px;margin-bottom:18px;'>`
+                + `<div id='radar-chart' style='width:100%;max-width:600px;height:340px;margin:auto;margin-top:40px;'></div>`
+                + `<table style='width:100%;margin-top:18px;border-collapse:collapse;'>`
+                + `<tr style='background:#f6c85f33;'>`
+                + `<th style='padding:6px 8px;'>Course</th><th>Teaching Quality</th><th>Content Practicality</th><th>Interactivity</th><th>Ease of Understanding</th><th>Total Score</th>`
+                + `</tr>`;
+            compareList.forEach(idx=>{
+                const c = courseRatings[idx];
+                const avg = calcAvg(c.ratings);
+                html += `<tr style='text-align:center;'>`
+                    + `<td style='padding:6px 8px;font-weight:bold;color:var(--il-blue);'>${c.title}</td>`
+                    + `<td>${avg.quality.toFixed(2)}</td><td>${avg.practical.toFixed(2)}</td><td>${avg.interactive.toFixed(2)}</td><td>${avg.easy.toFixed(2)}</td><td>${avg.total.toFixed(2)}</td>`
+                + `</tr>`;
+            });
+            html += `</table></div>`;
+            return html;
+        }
+        
+        function enterCourseDetail(idx) {
+            currentCourseDetail = idx;
+            currentSection = 'course-detail';
+            document.getElementById('rating-panel').style.display = 'none';
+            document.getElementById('course-detail-panel').style.display = 'block';
+            document.getElementById('course-detail-title').textContent = courseRatings[idx].title;
+            renderCourseDetail();
+        }
+        
+        function backToRating() {
+            currentSection = 'rating';
+            document.getElementById('course-detail-panel').style.display = 'none';
+            document.getElementById('rating-panel').style.display = 'block';
+            currentCourseDetail = null;
+        }
+        
+        function renderCourseDetail() {
+            const course = courseRatings[currentCourseDetail];
+            const avg = calcAvg(course.ratings);
+            
+            let html = `<div class='rating-card'>`;
+            html += `<div class='rating-title'>${course.title} <span class='rating-meta'>[${course.subject}]</span></div>`;
+            html += `<div style='margin-bottom:16px;'>`;
+            html += `<div style='font-weight:bold;color:var(--il-blue);margin-bottom:8px;'>Course Overview</div>`;
+            html += `<div style='display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px;'>`;
+            html += `<div>Teaching Quality: ${renderStars(avg.quality)}</div>`;
+            html += `<div>Content Practicality: ${renderStars(avg.practical)}</div>`;
+            html += `<div>Interactivity: ${renderStars(avg.interactive)}</div>`;
+            html += `<div>Ease of Understanding: ${renderStars(avg.easy)}</div>`;
+            html += `</div>`;
+            html += `<div style='font-weight:bold;color:var(--il-pink);'>Total Score: ${(avg.total).toFixed(2)}</div>`;
+            html += `</div>`;
+            
+            // Rating Form Section
+            html += `<div style='margin-bottom:24px;'>`;
+            html += `<div style='font-weight:bold;color:var(--il-blue);margin-bottom:12px;'>Rate This Course</div>`;
+            html += `${renderRatingForm(currentCourseDetail)}`;
+            html += `</div>`;
+            
+            // Comments Section
+            html += `<div class='comment-board'>`;
+            html += `<div style='font-weight:bold;color:var(--il-blue);margin-bottom:8px;'>Student Comments</div>`;
+            html += `<div style='margin-bottom:8px;'>Filter by tag:`;
+            html += `<select id='detail-comment-tag-filter' onchange='filterDetailComments()' style='padding:2px 8px;border-radius:6px;margin-left:8px;'>`;
+            html += `<option value='all'>All</option>`;
+            html += `${commentTags.map(t=>`<option value='${t}'>${t}</option>`).join('')}`;
+            html += `</select>`;
+            html += `</div>`;
+            html += `<div id='detail-comment-list'>${renderComments(currentCourseDetail, 'all')}</div>`;
+            html += `<div class='add-comment-box'>`;
+            html += `<input id='detail-add-comment-input' type='text' placeholder='Add a comment...'/>`;
+            html += `<select id='detail-add-comment-tag' style='padding:2px 8px;border-radius:6px;'>`;
+            html += `<option value=''>Select tag</option>`;
+            html += `${commentTags.map(t=>`<option value='${t}'>${t}</option>`).join('')}`;
+            html += `</select>`;
+            html += `<button onclick='addDetailComment()'>Post</button>`;
+            html += `</div>`;
+            html += `</div>`;
+            
+            html += `</div>`;
+            
+            document.getElementById('course-detail-content').innerHTML = html;
+            
+            // Initialize star widgets
+            setTimeout(() => initStarWidget(currentCourseDetail), 0);
+        }
+        
+        function filterDetailComments() {
+            const tag = document.getElementById('detail-comment-tag-filter').value;
+            document.getElementById('detail-comment-list').innerHTML = renderComments(currentCourseDetail, tag);
+        }
+        
+        function addDetailComment() {
+            const input = document.getElementById('detail-add-comment-input');
+            const tagSel = document.getElementById('detail-add-comment-tag');
+            const val = input.value.trim();
+            const tag = tagSel.value;
+            if(!val) return;
+            
+            const user = localStorage.getItem('ratingUser') || 'You';
+            const role = 'student';
+            const now = new Date();
+            const time = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+            
+            courseRatings[currentCourseDetail].comments.push({
+                user, 
+                content: val, 
+                tags: tag ? [tag] : [], 
+                role, 
+                time, 
+                likes: 0
+            });
+            
+            input.value = '';
+            tagSel.value = '';
+            filterDetailComments();
+        }
+        // 渲染排行榜
+        function renderRankings() {
+            // Popular Courses: 按参与人数排序
+            const popular = courseRatings.slice().sort((a,b)=>{
+                // 参与人数用所有ratings的数量和comments数量估算
+                const aCount = (a.ratings?.length||0)*1000 + (a.comments?.length||0)*100;
+                const bCount = (b.ratings?.length||0)*1000 + (b.comments?.length||0)*100;
+                return bCount - aCount;
+            }).slice(0,5);
+            let html = '';
+            popular.forEach((c,i)=>{
+                html += `<div style='display:flex;align-items:center;margin-bottom:16px;'>
+                    <div style='font-size:1.5rem;font-weight:bold;color:#f59e42;width:28px;'>${i+1}</div>
+                    <div style='flex:1;'>
+                        <div style='font-weight:bold;color:#2563eb;'>${c.title}</div>
+                        <div style='color:#888;font-size:0.98rem;'>${c.subject} Dept.</div>
+                        <div style='color:#aaa;font-size:0.95rem;'>~${(c.ratings.length*1000 + c.comments.length*100)} participants</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('popular-courses-list').innerHTML = html;
+
+            // New Courses: resourceList前5
+            let newHtml = '';
+            resourceList.slice(0,5).forEach((r,i)=>{
+                newHtml += `<div style='display:flex;align-items:center;margin-bottom:16px;'>
+                    <div style='font-size:1.5rem;font-weight:bold;color:#f59e42;width:28px;'>${i+1}</div>
+                    <div style='flex:1;'>
+                        <div style='font-weight:bold;color:#2563eb;'>${r.title}</div>
+                        <div style='color:#888;font-size:0.98rem;'>${r.subject}</div>
+                        <div style='color:#aaa;font-size:0.95rem;'>${r.available? 'Available' : 'Unavailable'}</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('new-courses-list').innerHTML = newHtml;
+
+            // Five-Star: 按平均分排序
+            const fiveStar = courseRatings.slice().sort((a,b)=>{
+                const aAvg = calcAvg(a.ratings).total;
+                const bAvg = calcAvg(b.ratings).total;
+                return bAvg - aAvg;
+            }).slice(0,5);
+            let starHtml = '';
+            fiveStar.forEach((c,i)=>{
+                starHtml += `<div style='display:flex;align-items:center;margin-bottom:16px;'>
+                    <div style='font-size:1.5rem;font-weight:bold;color:#f59e42;width:28px;'>${i+1}</div>
+                    <div style='flex:1;'>
+                        <div style='font-weight:bold;color:#2563eb;'>${c.title}</div>
+                        <div style='color:#888;font-size:0.98rem;'>${c.subject} Dept.</div>
+                        <div style='color:#aaa;font-size:0.95rem;'>Avg. ${(calcAvg(c.ratings).total).toFixed(2)} / 5</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('five-star-list').innerHTML = starHtml;
+        }
+        // 页面加载时渲染排行榜
+        document.addEventListener('DOMContentLoaded', renderRankings);
+        
+        // 课程跳转函数
+        function jumpToCourse(courseName) {
+            // 跳转到评分页面并搜索对应课程
+            enterSection('rating');
+            document.getElementById('rating-type-select').value = 'course';
+            renderRating();
+            
+            // 查找课程索引
+            const courseIndex = courseRatings.findIndex(c => c.title === courseName);
+            if (courseIndex !== -1) {
+                // 直接进入课程详情
+                enterCourseDetail(courseIndex);
+            }
+        }
+    </script>
+</body>
+</html> 

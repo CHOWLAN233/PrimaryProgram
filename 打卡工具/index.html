@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打卡工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>打卡工具</h1>
+        <form id="punchForm">
+            <input type="text" id="punchInput" placeholder="请输入今日打卡内容" required />
+            <button type="submit">打卡</button>
+        </form>
+        <button id="exportBtn" type="button">导出打卡数据</button>
+        <h2>历史打卡记录</h2>
+        <ul id="punchList"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
